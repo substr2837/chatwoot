@@ -182,3 +182,6 @@ en:
       results_title: Search results
     hero:
       sub_title: Search for the articles here or browse the categories below.
+    shopify:
+      name: "Shopify"
+      description: "This integration will allow you to manage customer comments related to their orders on Shopify"

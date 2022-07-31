@@ -6,11 +6,13 @@ export const DEFAULT_CONVERSATION_SIDEBAR_ITEMS_ORDER = [
   { name: 'contact_attributes' },
   { name: 'previous_conversation' },
   { name: 'conversation_participants' },
+  { name: 'shopify_order' }
 ];
 export const DEFAULT_CONTACT_SIDEBAR_ITEMS_ORDER = [
   { name: 'contact_attributes' },
   { name: 'contact_labels' },
   { name: 'previous_conversation' },
+  { name: 'shopify_order' }
 ];
 
 export const isEditorHotKeyEnabled = (uiSettings, key) => {
