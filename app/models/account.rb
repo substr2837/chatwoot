@@ -60,6 +60,7 @@ class Account < ApplicationRecord
   has_many :email_channels, dependent: :destroy_async, class_name: '::Channel::Email'
   has_many :facebook_pages, dependent: :destroy_async, class_name: '::Channel::FacebookPage'
   has_many :hooks, dependent: :destroy_async, class_name: 'Integrations::Hook'
+  has_many :shopify_integrations, dependent: :destroy_async, class_name: 'Integrations::Shopify'
   has_many :inboxes, dependent: :destroy_async
   has_many :labels, dependent: :destroy_async
   has_many :line_channels, dependent: :destroy_async, class_name: '::Channel::Line'
@@ -80,6 +81,7 @@ class Account < ApplicationRecord
   has_many :webhooks, dependent: :destroy_async
   has_many :whatsapp_channels, dependent: :destroy_async, class_name: '::Channel::Whatsapp'
   has_many :working_hours, dependent: :destroy_async
+  has_many :shopify_customer, dependent: :destroy_async
 
   has_flags ACCOUNT_SETTINGS_FLAGS.merge(column: 'settings_flags').merge(DEFAULT_QUERY_SETTING)
 

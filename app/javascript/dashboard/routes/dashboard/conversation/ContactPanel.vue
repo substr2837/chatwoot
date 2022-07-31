@@ -111,6 +111,19 @@
               />
             </accordion-item>
           </div>
+          <div v-if="element.name === 'shopify_order'">
+            <accordion-item
+              :title="'Shopify Orders'"
+              :is-open="isContactSidebarItemOpen('is_ct_shopify_open')"
+              @click="value => toggleSidebarUIState('is_ct_shopify_open', value)"
+            >
+              <div class="my-2" v-for="(item, i) in shopifyOrder.orders" :key="i">
+                <shopify-order-card
+                :contact-id="contact_id"
+                :shopify-data="item"/>
+              </div>
+            </accordion-item>
+          </div>
           <woot-feature-toggle
             v-else-if="element.name === 'macros'"
             feature-key="macros"
@@ -136,6 +149,7 @@ import alertMixin from 'shared/mixins/alertMixin';
 import AccordionItem from 'dashboard/components/Accordion/AccordionItem';
 import ContactConversations from './ContactConversations.vue';
 import ConversationAction from './ConversationAction.vue';
+import ShopifyOrderCard from 'dashboard/components/ShopifyOrderCard'
 import ConversationParticipant from './ConversationParticipant.vue';
 
 import ContactInfo from './contact/ContactInfo';
@@ -156,6 +170,7 @@ export default {
     CustomAttributeSelector,
     ConversationAction,
     ConversationParticipant,
+    ShopifyOrderCard,
     draggable,
     MacrosList,
   },
@@ -179,6 +194,8 @@ export default {
       dragEnabled: true,
       conversationSidebarItems: [],
       dragging: false,
+      shopifyOrder: [],
+      contact_id: ""
     };
   },
   computed: {
@@ -222,10 +239,12 @@ export default {
       this.getContactDetails();
     },
   },
-  mounted() {
+  async mounted() {
     this.conversationSidebarItems = this.conversationSidebarItemsOrder;
     this.getContactDetails();
     this.$store.dispatch('attributes/get', 0);
+    await this.$store.dispatch('contacts/shopify', this.contactId);
+    this.shopifyOrder = this.$store.state.contacts.shopifyOrder;
   },
   methods: {
     onPanelToggle() {
@@ -233,6 +252,7 @@ export default {
     },
     getContactDetails() {
       if (this.contactId) {
+        this.contact_id = this.contactId;
         this.$store.dispatch('contacts/show', { id: this.contactId });
       }
     },

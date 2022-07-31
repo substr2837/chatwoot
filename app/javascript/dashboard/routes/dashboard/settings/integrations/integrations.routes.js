@@ -2,6 +2,7 @@ import Index from './Index';
 import SettingsContent from '../Wrapper';
 import Webhook from './Webhooks/Index';
 import DashboardApps from './DashboardApps/Index';
+import Shopify from './Shopify';
 import ShowIntegration from './ShowIntegration';
 import { frontendURL } from '../../../../helper/URLHelper';
 
@@ -41,6 +42,12 @@ export default {
           component: DashboardApps,
           name: 'settings_integrations_dashboard_apps',
           roles: ['administrator'],
+        },
+        {
+          path: 'shopify',
+          component: Shopify,
+          name: 'settings_integrations_shopify',
+          roles: ['administrator']
         },
         {
           path: ':integration_id',
