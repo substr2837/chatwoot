@@ -76,7 +76,7 @@
       "HEADER_BTN_TXT": "Add new integration",
       "LOADING": "Fetching attached Shopify account",
       "SEARCH_404": "There are no items matching this query",
-      "SIDEBAR_TXT": "<p><b>Shopify</b> </p> <p>When you integrated with Shopify you will able to see all your customers and also their orders. All your customer comments or complaints also will appear here on Chat Woot <br /><br /> For connect your <b>Shopify</b> tenant, click on the <b>Add new Shopify Integration</b> button. You can also remove any existing integrations by clicking on the Delete button.</p>",
+      "SIDEBAR_TXT": "<p><b>Shopify</b> </p> <p>When you integrated with Shopify you will able to see all your customers and also their orders. All your customer comments or complaints also will appear here on Chat Woot <br /><br /> To connect your <strong>Shopify</strong> merchant, click on the <strong>Add new Integration</strong> button. You can also remove any existing integrations by clicking on the Delete button.</p>",
       "LIST": {
         "404": "There are no Shopify tenant or admin account configured for this account.",
         "TITLE": "Manage Shopify Accounts",
@@ -129,39 +129,37 @@
         "CANCEL": "Cancel",
         "DESC": "Webhook events provide you the realtime information about what's happening in your Chatwoot account. Please enter a valid URL to configure a callback.",
         "FORM": {
-          "SUBMIT": "Edit webhook"
+          "SUBMIT": "Save"
         },
         "API": {
           "SUCCESS_MESSAGE": "Shopify updated successfully",
           "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        },
+        "CHECK": {
+          "SUCCESS_MESSAGE": "Success",
+          "ERROR_MESSAGE": "Error"
         }
       },
       "ADD": {
         "AUTHORIZE": "Authorize",
         "CANCEL": "Cancel",
         "TITLE": "Integrate new Shopify Account",
-        "DESC": "This integration will provide you the realtime information about what's happening in your Shopify tenant. Please enter a valid API Key and API Secret to configure a this integration.",
+        "DESC": "This integration will provide you with realtime information about what's happening in your Shopify merchant account. Please enter a valid Access Token.",
         "LATEST_TOKEN":"Latest token",
         "FORM": {
           "ACCOUNT_NAME": {
             "LABEL": "Account Name",
-            "PLACEHOLDER": "Example: thatShopify",
+            "PLACEHOLDER": "Example: shopify-test",
             "ERROR": "Please enter account name"
           },
-          "API_KEY": {
-            "LABEL": "API Key",
-            "PLACEHOLDER": "Example: uuid",
-            "ERROR": "Please enter a valid API Key"
+          "ACCESS_TOKEN": {
+            "LABEL": "Access Token",
+            "PLACEHOLDER": "Get it on https://admin.shopify.com/ Example: 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",
+            "ERROR": "Please enter access token"
           },
-          "API_SECRET": {
-            "LABEL": "API Secret",
-            "PLACEHOLDER": "Example: uuid",
-            "ERROR": "Please enter a valid API Secret"
-          },
-          "REDIRECT_URL":{
-            "LABEL": "Redirect URL",
-            "PLACEHOLDER" : "Example: https://localhost",
-            "ERROR": "Please enter valid url"
+          "API_VERSION": {
+            "LABEL": "API Version",
+            "PLACEHOLDER": "Get it on https://admin.shopify.com/ Example: 2023-01"
           },
           "SUBMIT": "Save Integration"
         },
@@ -170,18 +168,14 @@
           "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
         }
       },
-      "DELETE": {
-        "BUTTON_TEXT": "Remove",
-        "API": {
-          "SUCCESS_MESSAGE": "Shopify removed successfully",
-          "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
-        },
-        "CONFIRM": {
-          "TITLE": "Confirm Remove",
-          "MESSAGE": "Are you sure to remove? ",
-          "YES": "Yes, Remove ",
-          "NO": "No, Keep it"
-        }
+      "REMOVE":{
+        "MODAL_TITLE": "Confirm Removal",
+        "MODAL_CONTENT":"Are you sure want to remove this Shopify integration?",
+        "SUCCESS_MESSAGE": "Success to remove the intergration data",
+        "ERROR_MESSAGE": "Error while removing the integration data",
+        "YES_LABEL": "Yes",
+        "NO_LABEL": "No",
+        "TOOLTIP":"Remove Integration"
       }
     },
     "SLACK": {

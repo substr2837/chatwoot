@@ -2,17 +2,17 @@
 #
 # Table name: integrations_shopify_customer
 #
-#  id                   :integer          not null, primary key
-#  email                :string
-#  first_name           :string
-#  last_name            :string
-#  orders_count         :string
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  account_id           :integer
-#  contact_id           :integer
-#  customer_id          :string
-#  shopify_account_if   :integer
+#  id                 :integer          not null, primary key
+#  email              :string
+#  first_name         :string
+#  last_name          :string
+#  orders_count       :string
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  account_id         :integer
+#  contact_id         :integer
+#  customer_id        :string
+#  shopify_account_id :integer
 #
 class Integrations::ShopifyCustomer < ApplicationRecord
     include Reauthorizable

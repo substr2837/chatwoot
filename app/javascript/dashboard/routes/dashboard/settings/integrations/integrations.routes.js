@@ -2,7 +2,7 @@ import Index from './Index';
 import SettingsContent from '../Wrapper';
 import Webhook from './Webhooks/Index';
 import DashboardApps from './DashboardApps/Index';
-import Shopify from './Shopify';
+import Shopify from './Shopify/Shopify';
 import ShowIntegration from './ShowIntegration';
 import { frontendURL } from '../../../../helper/URLHelper';
 

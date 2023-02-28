@@ -55,7 +55,7 @@
               </woot-button>
               <woot-button
                   v-tooltip.top="
-                    $t('INTEGRATION_SETTINGS.SHOPIFY.DELETE.BUTTON_TEXT')
+                    $t('INTEGRATION_SETTINGS.SHOPIFY.REMOVE.TOOLTIP')
                   "
                   variant="smooth"
                   color-scheme="alert"
@@ -83,18 +83,18 @@
     </div>
 
     <woot-modal :show.sync="showAddPopup" :on-close="hideAddPopup">
-      <new-shopify :on-close="hideAddPopup"/>
+      <new-shopify
+        v-if="showAddPopup"
+       :on-close="hideAddPopup"/>
     </woot-modal>
 
     <woot-modal :show.sync="showEditPopup" :on-close="hideEditPopup">
       <update-shopify
           v-if="showEditPopup"
           :account-name="selectedAccount.account_name"
-          :api-key="selectedAccount.api_key"
-          :api-secret="selectedAccount.api_secret"
           :id="selectedAccount.id"
-          :redirect-url="selectedAccount.redirect_url"
           :access-token="selectedAccount.access_token"
+          :api-version="selectedAccount.api_version"
           :updated-at="selectedAccount.updated_at"
           :on-close="hideEditPopup"
       />
@@ -104,8 +104,8 @@
         :show.sync="showDeleteConfirmationPopup"
         :on-close="closeDeletePopup"
         :on-confirm="confirmDeletion"
-        :title="$t('INTEGRATION_SETTINGS.WEBHOOK.DELETE.CONFIRM.TITLE')"
-        :message="$t('INTEGRATION_SETTINGS.WEBHOOK.DELETE.CONFIRM.MESSAGE')"
+        :title="$t('INTEGRATION_SETTINGS.SHOPIFY.REMOVE.MODAL_TITLE')"
+        :message="$t('INTEGRATION_SETTINGS.SHOPIFY.REMOVE.MODAL_CONTENT')"
         :confirm-text="$t('INTEGRATION_SETTINGS.WEBHOOK.DELETE.CONFIRM.YES')"
         :reject-text="$t('INTEGRATION_SETTINGS.WEBHOOK.DELETE.CONFIRM.NO')"
     />
@@ -174,11 +174,11 @@ export default {
         await this.$store.dispatch('shopify/remove', id);
         await this.$store.dispatch('shopify/get');
         this.showAlert(
-            this.$t('INTEGRATION_SETTINGS.SHOPIFY.DELETE.API.SUCCESS_MESSAGE')
+            this.$t('INTEGRATION_SETTINGS.SHOPIFY.REMOVE.SUCCESS_MESSAGE')
         );
       } catch (error) {
         this.showAlert(
-            this.$t('INTEGRATION_SETTINGS.SHOPIFY.DELETE.API.ERROR_MESSAGE')
+            this.$t('INTEGRATION_SETTINGS.SHOPIFY.REMOVE.ERROR_MESSAGE')
         );
       }
     },

@@ -16,6 +16,7 @@
                   'INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.ACCOUNT_NAME.PLACEHOLDER'
                 )
               "
+              v-on:keydown="resetAllowance"
               @input="$v.accountName.$touch"
           />
           <span v-if="$v.accountName.$error" class="message">
@@ -23,60 +24,40 @@
             </span>
         </label>
 
-        <label :class="{ error: $v.apiKey.$error }">
-          {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_KEY.LABEL') }}
+        <label :class="{ error: $v.accessToken.$error }">
+          {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.ACCESS_TOKEN.LABEL') }}
           <input
-              v-model.trim="apiKey"
+              v-model.trim="accessToken"
               type="text"
-              name="apiKey"
+              name="accessToken"
               :placeholder="
                 $t(
-                  'INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_KEY.PLACEHOLDER'
+                  'INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.ACCESS_TOKEN.PLACEHOLDER'
                 )
               "
-              @input="$v.apiKey.$touch"
+              v-on:keydown="resetAllowance"
+              @input="$v.accessToken.$touch"
           />
-          <span v-if="$v.apiKey.$error" class="message">
-              {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_KEY.ERROR') }}
+          <span v-if="$v.accessToken.$error" class="message">
+              {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.ACCESS_TOKEN.ERROR') }}
             </span>
         </label>
 
-        <label :class="{ error: $v.apiSecret.$error }">
-          {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_SECRET.LABEL') }}
+        <label :class="{ error: $v.apiVersion.$error }">
+          {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_VERSION.LABEL')}}
           <input
-              v-model.trim="apiSecret"
-              type="text"
-              name="apiSecret"
-              :placeholder="
-                $t(
-                  'INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_SECRET.PLACEHOLDER'
-                )
-              "
-              @input="$v.apiSecret.$touch"
-          />
-          <span v-if="$v.apiSecret.$error" class="message">
-              {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.API_SECRET.ERROR') }}
-            </span>
-        </label>
-
-        <label :class="{ error: $v.redirectUrl.$error }">
-          {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.REDIRECT_URL.LABEL') }}
-          <input
-              v-model.trim="redirectUrl"
-              type="text"
-              name="redirectUrl"
-              :placeholder="
+            v-model.trim="apiVersion"
+            type="text"
+            name="apiVersion"
+            :placeholder="
               $t(
-                'INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.REDIRECT_URL.PLACEHOLDER'
+                'INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM_API_VERSION.PLACEHOLDER'
               )
             "
-              @input="$v.redirectUrl.$touch"
-          />
-          <span v-if="$v.redirectUrl.$error" class="message">
-            {{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.FORM.REDIRECT_URL.ERROR') }}
-          </span>
-				</label>
-         <h7>{{ $t('INTEGRATION_SETTINGS.SHOPIFY.ADD.LATEST_TOKEN')+' '+(this.accessToken?moment(this.updatedAt).format("YYYY-MM-DD HH:mm"):"-")}}</h7>
+            v-on:keydown="resetAllowance"
+            @input="$v.apiVersion.$touch"
+          /> 
+        </label>
       </div>
 
       <div class="modal-footer">
@@ -86,7 +67,7 @@
           </woot-button>
           <woot-button
               :is-disabled="
-              $v.apiKey.$invalid || $v.accountName.$invalid || $v.apiSecret.$invalid || $v.redirectUrl.$invalid || uiFlags.updatingItem
+              $v.accessToken.$invalid || $v.accountName.$invalid || uiFlags.updatingItem || !allowCreate
             "
               :is-loading="uiFlags.updatingItem"
           >
@@ -106,6 +87,7 @@ import {required, url, minLength, maxLength} from 'vuelidate/lib/validators';
 import alertMixin from 'shared/mixins/alertMixin';
 import {mapGetters} from 'vuex';
 import moment from "moment";
+import shopifyApi from "../../../../../api/shopify.js"
 export default {
   mixins: [alertMixin],
   props: {
@@ -113,15 +95,11 @@ export default {
       type: String,
       required: true,
     },
-    apiKey: {
+    accessToken: {
       type: String,
       required: true,
     },
-    apiSecret: {
-      type: String,
-      required: true
-    },
-    redirectUrl: {
+    apiVersion: {
       type: String,
       required: true
     },
@@ -133,10 +111,6 @@ export default {
       type: Number,
       required: true
     },
-    accessToken: {
-      type: String,
-      required: true
-    },
     updatedAt: {
       type: String,
       required: true
@@ -145,6 +119,7 @@ export default {
   data() {
     return {
       shopfiyId: this.id,
+      allowCreate: !true
     };
   },
   validations: {
@@ -152,18 +127,15 @@ export default {
       required,
       minLength: minLength(3)
     },
-    apiKey: {
+    accessToken: {
       required,
       minLength: minLength(32),
       maxLength: maxLength(40)
     },
-    apiSecret: {
+    apiVersion: {
       required,
-      minLength: minLength(30),
-      maxLength: maxLength(40)
-    },
-    redirectUrl: {
-      required
+      minLength: minLength(7),
+      maxLength: maxLength(7)
     }
   },
   computed: {
@@ -171,20 +143,27 @@ export default {
   },
   methods: {
     getAuthorizePopup(){
-      window.location.href=`https://${this.accountName}/admin/oauth/authorize?client_id=${this.apiKey}&scope=read_orders,write_orders,read_customers,write_customers&redirect_uri=${this.redirectUrl}`;
+      shopifyApi.checkAccessToken(this.id, this.accountName, this.accessToken, this.apiVersion).then(data => {
+        if(Object.keys(data.data).includes("success")){
+          this.alertMessage = this.$t('INTEGRATION_SETTINGS.SHOPIFY.EDIT.CHECK.SUCCESS_MESSAGE');
+          this.allowCreate = true;
+        } else {
+          this.alertMessage = this.$t('INTEGRATION_SETTINGS.SHOPIFY.EDIT.CHECK.ERROR_MESSAGE');
+        }
+        this.showAlert(this.alertMessage);
+      });
+    },
+    resetAllowance(){
+      this.allowCreate = null;
     },
     closeAuthorizePopup(){
       this.showAuthorizePopup = false;
     },
     resetForm() {
       this.accountName = '';
-      this.apiKey = '';
-      this.apiSecret = '';
-      this.redirectUrl = '';
+      this.accessToken = '';
       this.$v.accountName.$reset();
-      this.$v.apiKey.$reset();
-      this.$v.apiSecret.$reset();
-      this.$v.redirectUrl.$reset();
+      this.$v.accessToken.$reset();
     },
     onAuthorize(){
       this.getAuthorizePopup();
@@ -194,7 +173,7 @@ export default {
         await this.$store.dispatch('shopify/update', {
           id: this.shopfiyId,
           account_name: this.accountName,
-          api_key: this.apiKey,
+          api_key: this.accessToken,
           api_secret: this.apiSecret,
           redirect_url: this.redirectUrl
         });
@@ -202,13 +181,11 @@ export default {
             'INTEGRATION_SETTINGS.SHOPIFY.EDIT.API.SUCCESS_MESSAGE'
         );
         await this.$store.dispatch('shopify/get');
+      } catch (error) {
+        this.alertMessage = this.$t('INTEGRATION_SETTINGS.SHOPIFY.EDIT.API.ERROR_MESSAGE');
+      } finally {
         this.resetForm();
         this.onClose();
-      } catch (error) {
-        this.alertMessage =
-            error.response.data.message ||
-            this.$t('INTEGRATION_SETTINGS.SHOPIFY.EDIT.API.ERROR_MESSAGE');
-      } finally {
         this.showAlert(this.alertMessage);
       }
     },

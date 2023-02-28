@@ -171,6 +171,7 @@ Rails.application.routes.draw do
               collection do
                 post :make_refund
               end
+              post 'check_access_token', :check_access_token
             end
             resources :hooks, only: [:create, :update, :destroy]
             resource :slack, only: [:create, :update, :destroy], controller: 'slack'

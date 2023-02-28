@@ -80,10 +80,32 @@ class Api::V1::Accounts::Integrations::ShopifyController < Api::V1::Accounts::Ba
     end
   end
 
+  def check_access_token
+    @shopify_account = Current.account.shopify_integrations.find_by id: params[:shopify_id]
+    begin
+      response = RestClient.get "https://#{params[:account_name]}/admin/api/#{params[:api_version]}/shop.json",
+      {
+        content_type: :json,
+        "X-Shopify-Access-Token": "#{params[:access_token]}"
+      }
+    rescue RestClient::ExceptionWithResponse => err
+      response = err.response.body
+    end
+
+    @response_obj = JSON.parse(response, object_class: OpenStruct)
+
+    unless !@response_obj[:errors].nil?
+      render json: {"success"=>"true"}
+    else
+      render json: {"error"=>"true"}
+    end
+   
+  end
+
   private
 
   def shopify_params
-    params.require(:shopify).permit(:api_key, :api_secret, :account_name, :redirect_url)
+    params.require(:shopify).permit(:account_name, :access_token, :api_version)
   end
 
   def fetch_shopify

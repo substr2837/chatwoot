@@ -165,6 +165,9 @@ en:
     webhooks:
       name: "Webhooks"
       description: "Webhook events provide you the realtime information about what's happening in your account. You can make use of the webhooks to communicate the events to your favourite apps like Slack or Github. Click on Configure to set up your webhooks."
+    shopify:
+      name: "Shopify"
+      description: "Integrate with Shopify"
     dialogflow:
       name: "Dialogflow"
       description: "Build chatbots using Dialogflow and connect them to your inbox quickly. Let the bots handle the queries before handing them off to a customer service agent."

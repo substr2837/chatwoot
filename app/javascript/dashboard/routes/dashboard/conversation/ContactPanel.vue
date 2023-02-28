@@ -118,9 +118,10 @@
               @click="value => toggleSidebarUIState('is_ct_shopify_open', value)"
             >
               <div class="my-2" v-for="(item, i) in shopifyOrder.orders" :key="i">
-                <shopify-order-card
+                <div>{{item}}</div>
+                <!-- <shopify-order-card
                 :contact-id="contact_id"
-                :shopify-data="item"/>
+                :shopify-data="item"/> -->
               </div>
             </accordion-item>
           </div>

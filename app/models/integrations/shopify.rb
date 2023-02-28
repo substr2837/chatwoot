@@ -5,9 +5,7 @@
 #  id           :integer          not null, primary key
 #  access_token :string
 #  account_name :string
-#  api_key      :string
-#  api_secret   :string
-#  redirect_url :string
+#  api_version  :string
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  account_id   :integer
