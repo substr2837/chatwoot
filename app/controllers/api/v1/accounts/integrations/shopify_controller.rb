@@ -3,18 +3,25 @@ class Api::V1::Accounts::Integrations::ShopifyController < Api::V1::Accounts::Ba
   before_action :check_authorization?
 
   def index
-    @shopify = Current.account.shopify_integrations
-    render json: @shopify
+    @shopify_list = Array.new
+    Current.account.hooks.where(app_id: "SHOPIFY").each do |hook|
+      @shopify_list.append(map_hook_to_integration(hook))
+    end
+
+    render json: @shopify_list
   end
 
   def create
-    @shopify = Current.account.shopify_integrations.new(shopify_params)
+    @shopify = map_integration_to_map(Current.account.hooks.new)
+    @shopify.app_id = "SHOPIFY"
     @shopify.save!
     render json: @shopify
   end
 
   def update
-    @shopify.update!(shopify_params)
+    shopify_modify = map_integration_to_map(Current.account.hooks.find(shopify_params[:id]))
+    shopify_modify.app_id = "SHOPIFY"
+    @shopify.update!(shopify_modify.as_json)
   end
 
   def destroy
@@ -81,7 +88,6 @@ class Api::V1::Accounts::Integrations::ShopifyController < Api::V1::Accounts::Ba
   end
 
   def check_access_token
-    @shopify_account = Current.account.shopify_integrations.find_by id: params[:shopify_id]
     begin
       response = RestClient.get "https://#{params[:account_name]}/admin/api/#{params[:api_version]}/shop.json",
       {
@@ -99,20 +105,42 @@ class Api::V1::Accounts::Integrations::ShopifyController < Api::V1::Accounts::Ba
     else
       render json: {"error"=>"true"}
     end
-   
   end
 
   private
 
   def shopify_params
-    params.require(:shopify).permit(:account_name, :access_token, :api_version)
+    params.require(:shopify).permit(:id, :account_name, :access_token, :api_version)
   end
 
   def fetch_shopify
-    @shopify = Current.account.shopify_integrations.find(params[:id])
+    @shopify = Current.account.hooks.find(params[:id])
   end
 
   def check_authorization?
     authorize(:shopify)
   end
+
+  def map_hook_to_integration(hook)
+    setting_json = JSON.parse(hook.settings)
+    @integration = {
+      "account_name" => setting_json["accountname"],
+      "api_version" => setting_json["apiversion"],
+      "access_token" => hook.access_token,
+      "id" => hook.id
+    }
+  end
+
+  def map_integration_to_map(shopify)
+    shopify.id = shopify_params[:id]
+    setting_json = {
+      "accountname" => shopify_params[:account_name],
+      "apiversion" => shopify_params[:api_version]
+    }
+    shopify.settings = JSON[setting_json]
+    shopify.app_id = @shopify_id
+    shopify.access_token = shopify_params[:access_token]
+    shopify
+  end
+
 end

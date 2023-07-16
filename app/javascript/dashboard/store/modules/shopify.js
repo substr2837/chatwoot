@@ -48,7 +48,11 @@ export const actions = {
     update: async ({commit}, {id, ...updateObj}) => {
         commit(types.default.SET_SHOPIFY_UI_FLAG, {updateItem: true});
         try {
+            updateObj.id = id;
             const response = await shopifyAPI.update(id, updateObj);
+            console.log("=====");
+            console.log(updateObj);
+            console.log(response);
             commit(types.default.UPDATE_SHOPIFY, response.data);
         } catch (error) {
             throw new Error(error);

@@ -173,9 +173,8 @@ export default {
         await this.$store.dispatch('shopify/update', {
           id: this.shopfiyId,
           account_name: this.accountName,
-          api_key: this.accessToken,
-          api_secret: this.apiSecret,
-          redirect_url: this.redirectUrl
+          access_token: this.accessToken,
+          api_version: this.apiVersion
         });
         this.alertMessage = this.$t(
             'INTEGRATION_SETTINGS.SHOPIFY.EDIT.API.SUCCESS_MESSAGE'
