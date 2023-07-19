@@ -12,14 +12,14 @@ class Api::V1::Accounts::Integrations::ShopifyController < Api::V1::Accounts::Ba
   end
 
   def create
-    @shopify = map_integration_to_map(Current.account.hooks.new)
+    @shopify = map_integration_to_hooks(Current.account.hooks.new)
     @shopify.app_id = "SHOPIFY"
     @shopify.save!
     render json: @shopify
   end
 
   def update
-    shopify_modify = map_integration_to_map(Current.account.hooks.find(shopify_params[:id]))
+    shopify_modify = map_integration_to_hooks(Current.account.hooks.find(shopify_params[:id]))
     shopify_modify.app_id = "SHOPIFY"
     @shopify.update!(shopify_modify.as_json)
   end
@@ -131,7 +131,7 @@ class Api::V1::Accounts::Integrations::ShopifyController < Api::V1::Accounts::Ba
     }
   end
 
-  def map_integration_to_map(shopify)
+  def map_integration_to_hooks(shopify)
     shopify.id = shopify_params[:id]
     setting_json = {
       "accountname" => shopify_params[:account_name],

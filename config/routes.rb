@@ -413,4 +413,8 @@ Rails.application.routes.draw do
   # ----------------------------------------------------------------------
   # Routes for testing
   resources :widget_tests, only: [:index] unless Rails.env.production?
+
+  # Routes for Shopify Admin Reverse Proxy
+  match 'shopifyapi/*path' => 'shopify_api#index', via: [:get, :post, :put, :patch, :delete]
+
 end
