@@ -92,6 +92,7 @@
                 attribute-type="contact_attribute"
                 :contact-id="contact.id"
               />
+              <shopify-orders/>
             </accordion-item>
           </div>
           <div v-else-if="element.name === 'previous_conversation'">

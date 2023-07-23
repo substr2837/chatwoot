@@ -34,6 +34,7 @@
                 value => toggleSidebarUIState('is_ct_custom_attr_open', value)
               "
             >
+              <h1>Yeay</h1>
               <custom-attributes
                 :contact-id="contact.id"
                 attribute-type="contact_attribute"
